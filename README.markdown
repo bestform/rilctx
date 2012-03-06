@@ -1,7 +1,9 @@
 rilctx
 ======
 
-Convenient Context Menu Entry for read it later.
+Read it later chrome extension.
+
+A convenient context menu entry for read it later.
 
 To save a link, choose "Read it later" from the context menu on the link.
 
