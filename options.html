@@ -1,0 +1,47 @@
+<html>
+<head><title>rilctx</title></head>
+<script type="text/javascript">
+
+// Saves options to localStorage.
+function save_options() {
+  var username = document.getElementById("username").value;
+  var password = document.getElementById("password").value;
+  var shownotifications = document.getElementById("shownotifications").checked;
+
+  localStorage["username"] = username;
+  localStorage["password"] = password;
+  localStorage["shownotifications"] = shownotifications;
+
+  // Update status to let user know options were saved.
+  var status = document.getElementById("status");
+  status.innerHTML = "Options Saved.";
+  setTimeout(function() {
+    status.innerHTML = "";
+  }, 750);
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options() {
+  var username = localStorage["username"];
+  if (username) {
+    document.getElementById("username").value = username;
+  }
+  var password = localStorage["password"];
+  if (password) {
+    document.getElementById("password").value = password;
+  }
+  var shownotifications = localStorage["shownotifications"] !== "false";
+  document.getElementById("shownotifications").checked = shownotifications;
+}
+
+</script>
+
+<body onload="restore_options()">
+
+Username: <input type="text" id="username" /><br />
+Password: <input type="password" id="password" /><br />
+Show Notifications: <input type="checkbox" id="shownotifications" /><br />
+<div id="status"></div><br />
+<button onclick="save_options()">Save</button>
+</body>
+</html>

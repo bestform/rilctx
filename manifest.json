@@ -1,0 +1,16 @@
+{
+    "name": "rilctx",
+    "version": "0.1",
+    "description": "Convenient Context Menu Entry for read it later",
+    "background_page": "background.html",
+    "permissions" : [
+        "tabs",
+        "contextMenus",
+        "notifications",
+        "<all_urls>"
+    ],
+    "options_page": "options.html",
+    "icons" : {
+        "16" : "link_add.png"
+    }
+}
