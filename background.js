@@ -6,7 +6,7 @@ function post(url, params, savedUrl){
     if (getShownotifications() && request.readyState==4 && request.status==200){
       var notification = webkitNotifications.createNotification(
         'link_add.png',  // icon url - can be relative
-        'Saved URL to Read it later',  // notification title
+        'Saved URL to Pocket',  // notification title
         savedUrl  // notification body text
       );
       notification.show();
@@ -61,4 +61,4 @@ function ril(info, tab){
 }
 
 chrome.contextMenus.removeAll();
-chrome.contextMenus.create({"title":"Read it later", "contexts":["link","page"], "onclick":ril});
+chrome.contextMenus.create({"title":"Send to Pocket", "contexts":["link","page"], "onclick":ril});

@@ -1,7 +1,7 @@
 {
-    "name": "rilctx",
+    "name": "pocketctx",
     "version": "0.1",
-    "description": "Convenient Context Menu Entry for read it later",
+    "description": "Convenient Context Menu Entry for Pocket",
     "background_page": "background.html",
     "permissions" : [
         "tabs",
