@@ -1,4 +1,4 @@
-pocketctx
+rilctx
 ======
 
 Pocket chrome extension.
