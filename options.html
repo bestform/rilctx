@@ -1,47 +1,84 @@
 <html>
 <head><title>rilctx</title>
-<script type="text/javascript">
+    <script type="text/javascript" src="background.js"></script>
+    <script type="text/javascript">
 
-// Saves options to localStorage.
-function save_options() {
-  var username = document.getElementById("username").value;
-  var password = document.getElementById("password").value;
-  var shownotifications = document.getElementById("shownotifications").checked;
+        // Saves User credentials to localStorage
+        function save_options() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var shownotifications = document.getElementById("shownotifications").checked;
 
-  localStorage["username"] = username;
-  localStorage["password"] = password;
-  localStorage["shownotifications"] = shownotifications;
+            localStorage["username"] = username;
+            localStorage["password"] = password;
+            localStorage["shownotifications"] = shownotifications;
 
-  // Update status to let user know options were saved.
-  var status = document.getElementById("status");
-  status.innerHTML = "Options Saved.";
-  setTimeout(function() {
-    status.innerHTML = "";
-  }, 750);
-}
 
-// Restores select box state to saved value from localStorage.
-function restore_options() {
-  var username = localStorage["username"];
-  if (username) {
-    document.getElementById("username").value = username;
-  }
-  var password = localStorage["password"];
-  if (password) {
-    document.getElementById("password").value = password;
-  }
-  var shownotifications = localStorage["shownotifications"] !== "false";
-  document.getElementById("shownotifications").checked = shownotifications;
-}
+            // Update status to let user know options were saved.
+            var status = document.getElementById("status");
+            status.innerHTML = "Options Saved.";
+            setTimeout(function () {
+                status.innerHTML = "";
+            }, 750);
+            validateCredentials();
+        }
 
-</script>
+        // Restores select box state to saved value from localStorage.
+        function restore_options() {
+            var username = localStorage["username"];
+            if (username) {
+                document.getElementById("username").value = username;
+            }
+            var password = localStorage["password"];
+            if (password) {
+                document.getElementById("password").value = password;
+            }
+            var shownotifications = localStorage["shownotifications"] !== "false";
+            document.getElementById("shownotifications").checked = shownotifications;
+        }
+
+        // Checks credentials with Pocket (ril)
+        function validateCredentials() {
+            var apiurl = "https://readitlaterlist.com/v2/auth";
+            var params = getPrefix() + getApiKey();
+            var request = new XMLHttpRequest();
+            request.open("POST", apiurl, true);
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            request.onreadystatechange = function () {
+                if (request.readyState == 4 && request.status == 200) {
+                    return;
+                } else {
+                    if (getShownotifications() && request.status == 401 && request.readyState == 4) {
+                        var notification = webkitNotifications.createNotification(
+                                'link_add.png', // icon url - can be relative
+                                'Authentication Error', // notification title
+                                'Your username or password is not correct.'  // notification body text
+                        );
+                        notification.show();
+                        return false;
+                    }
+                    else if (!getShownotifications() && request.status == 401 && request.readyState == 4){
+                        var status = document.getElementById("status");
+                        status.innerHTML = "Your username or password is not correct.";
+                        setTimeout(function () {
+                            status.innerHTML = "";
+                        }, 1500);
+                    }
+
+                }
+            }
+            request.send(params);
+        }
+    </script>
 </head>
 <body onload="restore_options()">
 
-Username: <input type="text" id="username" /><br />
-Password: <input type="password" id="password" /><br />
-Show Notifications: <input type="checkbox" id="shownotifications" /><br />
-<div id="status"></div><br />
+Username: <input type="text" id="username"/><br/>
+Password: <input type="password" id="password"/><br/>
+Show Notifications: <input type="checkbox" id="shownotifications"/><br/>
+
+<div id="status"></div>
+<br/>
 <button onclick="save_options()">Save</button>
 </body>
 </html>
