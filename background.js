@@ -34,11 +34,15 @@ function getPrefix(){
 }
 
 function getApiKey(){
-    return "&apikey=eb7dmX46Taf23C2c57A2e87t0lg0Q529"
+    return "eb7dmX46Taf23C2c57A2e87t0lg0Q529"
 }
 
 function validate(){
   return localStorage["username"] && localStorage["password"];
+}
+
+function getBaseURL(method){
+  return "https://readitlaterlist.com/v2/"+method;
 }
 
 function add(url){
@@ -47,8 +51,8 @@ function add(url){
     return;
   }
   var encodedUrl = encodeURIComponent(url);
-  var apiurl = "https://readitlaterlist.com/v2/add";
-  var params = getPrefix()+"&apikey=237dflebT02f3E5855ANq19D97g8Fb14"+"&url="+encodedUrl+"&title="+encodedUrl;
+  var apiurl = getBaseURL("add");
+  var params = getPrefix()+"&apikey="+getApiKey()+"&url="+encodedUrl+"&title="+encodedUrl;
   post(apiurl, params, url);    
 }
 

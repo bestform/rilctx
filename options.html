@@ -3,6 +3,8 @@
     <script type="text/javascript" src="background.js"></script>
     <script type="text/javascript">
 
+		var infoTimeout = null;
+		
         // Saves User credentials to localStorage
         function save_options() {
             var username = document.getElementById("username").value;
@@ -17,7 +19,7 @@
             // Update status to let user know options were saved.
             var status = document.getElementById("status");
             status.innerHTML = "Options Saved.";
-            setTimeout(function () {
+            infoTimeout = setTimeout(function () {
                 status.innerHTML = "";
             }, 750);
             validateCredentials();
@@ -39,8 +41,8 @@
 
         // Checks credentials with Pocket (ril)
         function validateCredentials() {
-            var apiurl = "https://readitlaterlist.com/v2/auth";
-            var params = getPrefix() + getApiKey();
+            var apiurl = getBaseURL("auth");
+            var params = getPrefix() + "&apikey=" + getApiKey();
             var request = new XMLHttpRequest();
             request.open("POST", apiurl, true);
             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -48,21 +50,14 @@
                 if (request.readyState == 4 && request.status == 200) {
                     return;
                 } else {
-                    if (getShownotifications() && request.status == 401 && request.readyState == 4) {
-                        var notification = webkitNotifications.createNotification(
-                                'link_add.png', // icon url - can be relative
-                                'Authentication Error', // notification title
-                                'Your username or password is not correct.'  // notification body text
-                        );
-                        notification.show();
-                        return false;
-                    }
-                    else if (!getShownotifications() && request.status == 401 && request.readyState == 4){
+                    if (request.status == 401 && request.readyState == 4){
                         var status = document.getElementById("status");
-                        status.innerHTML = "Your username or password is not correct.";
+                        clearTimeout(infoTimeout);
+						infoTimeout = null;
+						status.innerHTML = "Your username or password is not correct.";
                         setTimeout(function () {
                             status.innerHTML = "";
-                        }, 1500);
+                        }, 3500);
                     }
 
                 }
